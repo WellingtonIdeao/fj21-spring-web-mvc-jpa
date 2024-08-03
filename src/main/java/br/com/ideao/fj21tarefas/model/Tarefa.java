@@ -1,10 +1,17 @@
 package br.com.ideao.fj21tarefas.model;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
+
 import java.util.Calendar;
 
 public class Tarefa {
     private long id;
+
+    @NotBlank(message = "{tarefa.descricao.vazia}")
+    @Size(min = 5, message ="{tarefa.descricao.pequena}" )
     private String descricao;
+
     private boolean finalizado;
     private Calendar dataFinalizacao;
 
