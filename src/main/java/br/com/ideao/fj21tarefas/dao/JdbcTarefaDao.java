@@ -58,4 +58,13 @@ public class JdbcTarefaDao {
             throw new RuntimeException(e);
         }
     }
+
+    public void remover(Tarefa tarefa) {
+        try(PreparedStatement pstmt = connection.prepareStatement("DELETE FROM tarefa WHERE id=?")) {
+            pstmt.setLong(1, tarefa.getId());
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

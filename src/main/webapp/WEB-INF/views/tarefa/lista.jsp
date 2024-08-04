@@ -37,6 +37,7 @@
                         pattern="dd/MM/yyyy" />
                     </td>
                     <td>
+                        <a href="removeTarefa?id=${tarefa.id}">Remover</a>
                     </td>
                 </tr>
             </tbody>

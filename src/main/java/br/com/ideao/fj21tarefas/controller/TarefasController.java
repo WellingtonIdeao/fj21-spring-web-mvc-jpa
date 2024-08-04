@@ -47,4 +47,16 @@ public class TarefasController {
         }
         return "tarefa/lista";
     }
+
+    @RequestMapping("removeTarefa")
+    public String remove(Tarefa tarefa) {
+        try(Connection connection = new ConnectionFactory().getConnection()) {
+            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
+            dao.remover(tarefa);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return "redirect:listaTarefas";
+//        return "forward:listaTarefas";
+    }
 }
