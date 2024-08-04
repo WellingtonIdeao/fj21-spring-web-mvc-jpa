@@ -2,6 +2,7 @@ package br.com.ideao.fj21tarefas.model;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Calendar;
 
@@ -13,6 +14,8 @@ public class Tarefa {
     private String descricao;
 
     private boolean finalizado;
+
+    @DateTimeFormat(pattern="dd/MM/yyyy")
     private Calendar dataFinalizacao;
 
     public long getId() {

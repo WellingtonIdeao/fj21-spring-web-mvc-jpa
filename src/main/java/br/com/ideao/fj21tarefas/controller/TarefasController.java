@@ -59,4 +59,26 @@ public class TarefasController {
         return "redirect:listaTarefas";
 //        return "forward:listaTarefas";
     }
+
+    @RequestMapping("mostraTarefa")
+    public String mostra(long id, Model model) {
+        try(Connection connection = new ConnectionFactory().getConnection()) {
+            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
+            model.addAttribute("tarefa", dao.buscaPorId(id));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return "tarefa/mostra";
+    }
+
+    @RequestMapping("alteraTarefa")
+    public String altera(Tarefa tarefa) {
+        try(Connection connection = new ConnectionFactory().getConnection()) {
+            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
+            dao.alterar(tarefa);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return "redirect:listaTarefas";
+    }
 }

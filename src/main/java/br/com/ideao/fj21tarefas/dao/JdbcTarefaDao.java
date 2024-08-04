@@ -67,4 +67,50 @@ public class JdbcTarefaDao {
             throw new RuntimeException(e);
         }
     }
+
+    public Tarefa buscaPorId(long id) {
+        Tarefa tarefa = new Tarefa();
+        Calendar dataFinalizacao = Calendar.getInstance();
+        try(PreparedStatement pstmt = connection.prepareStatement("SELECT * FROM tarefa WHERE id=?")){
+            pstmt.setLong(1, id);
+
+            try(ResultSet rs = pstmt.executeQuery()){
+                while(rs.next()){
+                    tarefa.setId(rs.getLong("id"));
+                    tarefa.setDescricao(rs.getString("descricao"));
+                    tarefa.setFinalizado(rs.getBoolean("finalizado"));
+                    Date date = rs.getDate("dataFinalizacao");
+
+                    if(date != null){
+                        dataFinalizacao.setTime(date);
+                        tarefa.setDataFinalizacao(dataFinalizacao);
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return tarefa;
+    }
+
+    public void alterar(Tarefa tarefa) {
+        String sql = "UPDATE tarefa SET descricao=?, finalizado=?, dataFinalizacao=? WHERE id=?";
+
+        try(PreparedStatement pstmt= connection.prepareStatement(sql)) {
+            pstmt.setString(1, tarefa.getDescricao());
+            pstmt.setBoolean(2, tarefa.isFinalizado());
+            Calendar dataFinalizacao = tarefa.getDataFinalizacao() ;
+
+            if(tarefa.getDataFinalizacao() != null){
+               pstmt.setDate(3, new Date(tarefa.getDataFinalizacao().getTimeInMillis()));
+            } else {
+                pstmt.setDate(3, null);
+            }
+            pstmt.setLong(4, tarefa.getId());
+
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
