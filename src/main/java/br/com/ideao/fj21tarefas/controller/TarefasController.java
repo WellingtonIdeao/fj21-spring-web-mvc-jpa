@@ -6,6 +6,7 @@ import br.com.ideao.fj21tarefas.model.Tarefa;
 
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -34,5 +35,16 @@ public class TarefasController {
             throw new RuntimeException(e);
         }
         return "tarefa/adicionada";
+    }
+
+    @RequestMapping("listaTarefas")
+    public String lista(Model model) {
+        try(Connection connection = new ConnectionFactory().getConnection()) {
+            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
+            model.addAttribute("tarefas", dao.listar());
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+        return "tarefa/lista";
     }
 }
