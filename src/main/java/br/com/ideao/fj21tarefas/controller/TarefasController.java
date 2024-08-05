@@ -82,12 +82,24 @@ public class TarefasController {
         }
         return "redirect:listaTarefas";
     }
+
     @ResponseBody
     @RequestMapping("finalizaTarefa")
     public void finaliza(long id) {
         try(Connection connection = new ConnectionFactory().getConnection()) {
             JdbcTarefaDao dao = new JdbcTarefaDao(connection);
-            dao.finaliza(id);
+            dao.finalizar(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @ResponseBody
+    @RequestMapping("remove")
+    public void removeAgora(long id) {
+        try(Connection connection = new ConnectionFactory().getConnection()) {
+            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
+            dao.removerAjax(id);
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

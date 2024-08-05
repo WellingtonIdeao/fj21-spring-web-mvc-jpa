@@ -114,13 +114,22 @@ public class JdbcTarefaDao {
         }
     }
 
-    public void finaliza(long id) {
+    public void finalizar(long id) {
         String sql = "UPDATE tarefa SET finalizado=?, dataFinalizacao=? WHERE id=?";
         try(PreparedStatement pstmt = connection.prepareStatement(sql)) {
             pstmt.setBoolean(1,true);
             pstmt.setDate(2, new Date(Calendar.getInstance().getTimeInMillis()));
             pstmt.setLong(3, id);
 
+            pstmt.execute();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void removerAjax(long id) {
+        try(PreparedStatement pstmt = connection.prepareStatement("DELETE FROM tarefa WHERE id=?")) {
+            pstmt.setLong(1, id);
             pstmt.execute();
         } catch (SQLException e) {
             throw new RuntimeException(e);

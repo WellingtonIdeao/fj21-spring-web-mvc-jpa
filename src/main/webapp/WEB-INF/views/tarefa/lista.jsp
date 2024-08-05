@@ -12,9 +12,14 @@
 <script type="text/javascript">
     function finalizaAgora(id) {
         $.post("finalizaTarefa", {'id' : id}, function() {
-        // selecionando o elemento html através da
-        // ID e alterando o HTML dele
-        $("#tarefa_"+id).html("Finalizado");
+            // selecionando o elemento html através da
+            // ID e alterando o HTML dele
+            $("#tarefa_"+id).html("Finalizado");
+        });
+    }
+    function removeAgora(id) {
+        $.post("remove", {'id': id}, function() {
+            $("#tarefa_row"+id).closest("tr").hide();
         });
     }
 </script>
@@ -33,12 +38,12 @@
 
         <c:forEach var="tarefa" items="${tarefas}">
             <tbody>
-                <tr>
+                <tr id="tarefa_row${tarefa.id}">
                     <th scope="row">${tarefa.id}</th>
                     <td>${tarefa.descricao}</td>
                     <c:if test="${tarefa.finalizado eq false}">
                         <td id="tarefa_${tarefa.id}">
-                            <a href="#" onClick="finalizaAgora(${tarefa.id})"> Finaliza agora!</a>
+                            <a href="#" onClick="finalizaAgora(${tarefa.id})">Finaliza agora!</a>
                         </td>
                     </c:if>
                     <c:if test="${tarefa.finalizado eq true}">
@@ -50,7 +55,7 @@
                     </td>
                     <td>
                         <a href="mostraTarefa?id=${tarefa.id}">Alterar</a>
-                        <a href="removeTarefa?id=${tarefa.id}">Remover</a>
+                        <a href="#" onClick="removeAgora(${tarefa.id})">Remover</a>
                     </td>
                 </tr>
             </tbody>
