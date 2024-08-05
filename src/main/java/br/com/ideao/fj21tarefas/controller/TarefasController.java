@@ -9,6 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -80,5 +81,15 @@ public class TarefasController {
             throw new RuntimeException(e);
         }
         return "redirect:listaTarefas";
+    }
+    @ResponseBody
+    @RequestMapping("finalizaTarefa")
+    public void finaliza(long id) {
+        try(Connection connection = new ConnectionFactory().getConnection()) {
+            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
+            dao.finaliza(id);
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
