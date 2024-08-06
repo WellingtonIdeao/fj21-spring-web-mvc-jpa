@@ -23,4 +23,7 @@
     <bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
         <property name="basename" value="/WEB-INF/messages" />
     </bean>
+    <mvc:interceptors>
+        <bean class="br.com.ideao.fj21tarefas.interceptor.AutorizadorInterceptor" />
+    </mvc:interceptors>
 </beans>
