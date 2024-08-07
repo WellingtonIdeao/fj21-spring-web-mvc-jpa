@@ -1,17 +1,26 @@
 package br.com.ideao.fj21tarefas.dao;
 
 import br.com.ideao.fj21tarefas.model.Tarefa;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+@Repository
 public class JdbcTarefaDao {
-    private Connection connection;
+    private final Connection connection;
 
-    public JdbcTarefaDao(Connection connection) {
-        this.connection = connection;
+    @Autowired
+    public JdbcTarefaDao(DataSource dataSource) {
+        try {
+            this.connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void adicionar(Tarefa tarefa) {

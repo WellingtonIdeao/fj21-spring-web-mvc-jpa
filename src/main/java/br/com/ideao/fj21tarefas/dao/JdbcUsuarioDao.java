@@ -1,17 +1,26 @@
 package br.com.ideao.fj21tarefas.dao;
 
 import br.com.ideao.fj21tarefas.model.Usuario;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+@Repository
 public class JdbcUsuarioDao {
-    private Connection connection;
+    private final Connection connection;
 
-    public JdbcUsuarioDao(Connection connection) {
-        this.connection = connection;
+    @Autowired
+    public JdbcUsuarioDao(DataSource dataSource) {
+        try {
+            this.connection = dataSource.getConnection();
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public boolean existeUsuario(Usuario usuario) {

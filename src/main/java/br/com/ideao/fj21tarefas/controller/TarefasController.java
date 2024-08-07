@@ -1,21 +1,24 @@
 package br.com.ideao.fj21tarefas.controller;
 
 import br.com.ideao.fj21tarefas.dao.JdbcTarefaDao;
-import br.com.ideao.fj21tarefas.jdbc.ConnectionFactory;
 import br.com.ideao.fj21tarefas.model.Tarefa;
 
 import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.Connection;
-import java.sql.SQLException;
-
 @Controller
 public class TarefasController {
+    private JdbcTarefaDao dao;
+
+    @Autowired
+    public TarefasController(JdbcTarefaDao dao) {
+        this.dao = dao;
+    }
 
     @RequestMapping("novaTarefa")
     public String form() {
@@ -28,80 +31,44 @@ public class TarefasController {
         if(result.hasFieldErrors("descricao")) {
             return "tarefa/formulario";
         }
-
-        try(Connection connection = new ConnectionFactory().getConnection()) {
-            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
-            dao.adicionar(tarefa);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        dao.adicionar(tarefa);
         return "tarefa/adicionada";
     }
 
     @RequestMapping("listaTarefas")
     public String lista(Model model) {
-        try(Connection connection = new ConnectionFactory().getConnection()) {
-            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
-            model.addAttribute("tarefas", dao.listar());
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        model.addAttribute("tarefas", dao.listar());
         return "tarefa/lista";
     }
 
     @RequestMapping("removeTarefa")
     public String remove(Tarefa tarefa) {
-        try(Connection connection = new ConnectionFactory().getConnection()) {
-            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
-            dao.remover(tarefa);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        dao.remover(tarefa);
         return "redirect:listaTarefas";
 //        return "forward:listaTarefas";
     }
 
     @RequestMapping("mostraTarefa")
     public String mostra(long id, Model model) {
-        try(Connection connection = new ConnectionFactory().getConnection()) {
-            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
-            model.addAttribute("tarefa", dao.buscaPorId(id));
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        model.addAttribute("tarefa", dao.buscaPorId(id));
         return "tarefa/mostra";
     }
 
     @RequestMapping("alteraTarefa")
     public String altera(Tarefa tarefa) {
-        try(Connection connection = new ConnectionFactory().getConnection()) {
-            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
-            dao.alterar(tarefa);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        dao.alterar(tarefa);
         return "redirect:listaTarefas";
     }
 
     @ResponseBody
     @RequestMapping("finalizaTarefa")
     public void finaliza(long id) {
-        try(Connection connection = new ConnectionFactory().getConnection()) {
-            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
-            dao.finalizar(id);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        dao.finalizar(id);
     }
 
     @ResponseBody
     @RequestMapping("remove")
     public void removeAgora(long id) {
-        try(Connection connection = new ConnectionFactory().getConnection()) {
-            JdbcTarefaDao dao = new JdbcTarefaDao(connection);
-            dao.removerAjax(id);
-        } catch (SQLException e) {
-            throw new RuntimeException(e);
-        }
+        dao.removerAjax(id);
     }
 }
