@@ -1,12 +1,17 @@
 package br.com.ideao.fj21tarefas.model;
 
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import java.util.Calendar;
 
+@Entity
+@Table(name = "tarefa")
 public class Tarefa {
+    @Id
+    @GeneratedValue
     private long id;
 
     @NotBlank(message = "{tarefa.descricao.vazia}")
@@ -16,6 +21,7 @@ public class Tarefa {
     private boolean finalizado;
 
     @DateTimeFormat(pattern="dd/MM/yyyy")
+    @Temporal(TemporalType.DATE)
     private Calendar dataFinalizacao;
 
     public long getId() {
